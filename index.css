@@ -1,0 +1,30 @@
+@font-face {
+  font-family: "San Fransisco Mono";
+  src: url("Fonts/SFMono-Bold.otf");
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: "San Fransisco Mono";
+  src: url("Fonts/SFMono-Medium.otf");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "San Fransisco Mono";
+  src: url("Fonts/SFMono-Regular.otf");
+  font-weight: 100;
+}
+
+* {
+  font-family: "San Fransisco Mono";
+  font-weight: 100;
+  padding: 0px;
+  margin: 0px;
+  background-color: black;
+  color: white;
+}
+
+h1 {
+  font-weight: 900;
+}
