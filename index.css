@@ -16,15 +16,41 @@
   font-weight: 100;
 }
 
+:root {
+  --gaps: 16px;
+}
+
 * {
   font-family: "San Fransisco Mono";
   font-weight: 100;
   padding: 0px;
   margin: 0px;
-  background-color: black;
-  color: white;
+  background-color: #0080ff;
 }
 
 h1 {
   font-weight: 900;
+}
+
+#board {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  grid-gap: var(--gaps);
+  aspect-ratio: 1 / 1;
+  width: min(calc(100vw - (var(--gaps) * 2)), calc(100vh - (var(--gaps) * 2)));
+  height: min(calc(100vw - (var(--gaps) * 2)), calc(100vh - (var(--gaps) * 2)));
+  margin: var(--gaps) auto var(--gaps) auto;
+}
+
+#board div {
+  border-radius: var(--gaps);
+}
+
+.black {
+  background-color: #000000;
+}
+
+.white {
+  background-color: #ffffff;
 }
