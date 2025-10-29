@@ -85,6 +85,10 @@ body {
   justify-content: space-between;
 }
 
+.seekbarLabels > span {
+  font-size: 16px;
+}
+
 .playerContainer {
   display: flex;
   justify-content: center;
