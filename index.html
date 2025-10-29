@@ -1,77 +1,84 @@
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Songify</title>
 
-  <title>Songify</title>
+    <link rel="shortcut icon" type="image/png" href="Icons/Songify.png" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#ff8000" />
+    <meta name="description" content="An app to find songs a user might like." />
+    <link rel="stylesheet" href="index.css" />
+    <script async src="index.js"></script>
+  </head>
+  <body>
+    <div class="card">
+      <img />
+      <div class="explicitcy">
+        <p class="title"></p>
+      </div>
+      <p class="artist"></p>
+      <div class="seekbarContainer">
+        <input type="range" class="seekbar" min="0" max="30" value="0" step="0.1" />
+        <div class="seekbarLabels">
+          <span class="currentTimeLabel">00:00</span>
+          <span class="durationLabel">00:00</span>
+        </div>
+      </div>
+      <div class="playerContainer">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="play active">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" />
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="pause">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M9 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" />
+          <path d="M17 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" />
+        </svg>
+      </div>
+      <p class="details"></p>
+      <div class="volumeContainer">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M15 8a5 5 0 0 1 0 8" />
+          <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
+        </svg>
 
-  <script src="index.js"></script>
-  <link rel="stylesheet" href="index.css" />
-</head>
-<body>
-  <div class="card">
-    <img />
-    <div class="explicitcy">
-      <p class="title"></p>
-    </div>
-    <p class="artist"></p>
-    <div class="seekbarContainer">
-      <input type="range" class="seekbar" min="0" max="30" value="0" step="0.1" />
-      <div class="seekbarLabels">
-        <span class="currentTimeLabel">00:00</span>
-        <span class="durationLabel">00:00</span>
+        <input type="range" class="volume" min="0" max="100" value="50" step="0.1" />
+
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M15 8a5 5 0 0 1 0 8" />
+          <path d="M17.7 5a9 9 0 0 1 0 14" />
+          <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
+        </svg>
       </div>
     </div>
-    <div class="playerContainer">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="play active">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-        <path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" />
-      </svg>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="pause">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-        <path d="M9 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" />
-        <path d="M17 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" />
-      </svg>
-    </div>
-    <p class="details"></p>
-    <div class="volumeContainer">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-        <path d="M15 8a5 5 0 0 1 0 8" />
-        <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
-      </svg>
+    <script type="module">
+      import { squircleObserver } from "https://esm.sh/corner-smoothing";
 
-      <input type="range" class="volume" min="0" max="100" value="50" step="0.1" />
+      window.applySquircles = function applySquircles() {
+        const allElements = document.querySelectorAll("*");
 
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-        <path d="M15 8a5 5 0 0 1 0 8" />
-        <path d="M17.7 5a9 9 0 0 1 0 14" />
-        <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
-      </svg>
-    </div>
-  </div>
-  <script type="module">
-    import { squircleObserver } from "https://esm.sh/corner-smoothing";
+        allElements.forEach((el) => {
+          const style = getComputedStyle(el);
+          const radius = parseFloat(style.borderRadius);
 
-    window.applySquircles = function applySquircles() {
-      const allElements = document.querySelectorAll("*");
+          if (radius > 0) {
+            squircleObserver(el, {
+              cornerRadius: radius,
+              cornerSmoothing: 0.6,
+              style: {
+                fill: style.backgroundColor,
+              },
+            });
+          }
+        });
+      };
 
-      allElements.forEach((el) => {
-        const style = getComputedStyle(el);
-        const radius = parseFloat(style.borderRadius);
-
-        if (radius > 0) {
-          squircleObserver(el, {
-            cornerRadius: radius,
-            cornerSmoothing: 0.6,
-            style: {
-              fill: style.backgroundColor,
-            },
-          });
-        }
-      });
-    };
-
-    window.addEventListener("load", window.applySquircles);
-  </script>
-</body>
+      window.addEventListener("load", window.applySquircles);
+    </script>
+    <button id="install-btn">Install App</button>
+  </body>
+</html>
