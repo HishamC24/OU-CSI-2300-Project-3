@@ -9,6 +9,19 @@ if ("serviceWorker" in navigator) {
 let deferredPrompt = null;
 const installBtn = document.getElementById("install-btn");
 
+// Hide button if already installed or running as PWA
+function checkInstallState() {
+    // Check if running in standalone mode (already installed as PWA)
+    if (window.matchMedia("(display-mode: standalone)").matches ||
+        window.navigator.standalone === true ||
+        document.referrer.includes("android-app://")) {
+        installBtn.style.display = "none";
+    }
+}
+
+// Check on page load
+checkInstallState();
+
 window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredPrompt = e;
@@ -25,86 +38,163 @@ installBtn.addEventListener("click", async () => {
 
 window.addEventListener("appinstalled", () => {
     installBtn.style.display = "none";
+    deferredPrompt = null;
 });
 
-// This is temporary until we have a backend
-// to provide a song and search query
+/**
+ * Fetches song data for the given songName and populates UI elements inside the specified divID.
+ * 
+ * @param {string} songName - The name of the song to search for.
+ * @param {string} divID - The ID of the container div where the song info should be placed.
+ */
+function fetchAndDisplaySong(songName, divID) {
+    const searchQuery =
+        "https://itunes.apple.com/search?term=" + encodeURIComponent(songName);
 
-const song = "Cant hold us maclemore";
+    let searchResult;
 
-// take txt and convert it into URL Friendly:
-// encodeURIComponent("Hello World")
-
-const searchQuery =
-    "https://itunes.apple.com/search?term=" + encodeURIComponent(song);
-
-let searchResult;
-
-fetch(searchQuery)
-    .then((response) => response.json())
-    .then((json) => {
-        if (json && Array.isArray(json.results)) {
-            json.results = json.results.filter((item) => item.kind === "song");
-        }
-
-        searchResult = json;
-        console.log(searchResult);
-
-        if (searchResult.results && searchResult.results.length > 0) {
-            const first = searchResult.results[0];
-            const artworkUrl = first.artworkUrl100.replace("100x100", "5000x5000");
-            const mainImg = document.querySelector("img");
-            mainImg.src = artworkUrl;
-            mainImg.alt = first.trackName + " by " + first.artistName;
-
-            const titleElem = document.querySelector(".title");
-            const artistElem = document.querySelector(".artist");
-            if (titleElem) {
-                titleElem.textContent = first.trackName;
-            }
-            if (artistElem) {
-                artistElem.textContent = first.artistName;
+    fetch(searchQuery)
+        .then((response) => response.json())
+        .then((json) => {
+            if (json && Array.isArray(json.results)) {
+                json.results = json.results.filter((item) => item.kind === "song");
             }
 
-            // Insert bold E if song is explicit
-            const explicitDiv = document.querySelector(".explicitcy");
-            if (explicitDiv) {
-                // Remove any previous explicit marker
-                explicitDiv.querySelectorAll(".explicit-marker").forEach(el => el.remove());
-                if (first.trackExplicitness && first.trackExplicitness === "explicit") {
-                    const boldE = document.createElement("b");
-                    boldE.className = "explicit-marker";
-                    boldE.textContent = "E";
-                    explicitDiv.insertBefore(boldE, explicitDiv.firstChild);
+            searchResult = json;
+            console.log(searchResult);
+
+            if (searchResult.results && searchResult.results.length > 0) {
+                const first = searchResult.results[0];
+                // const artworkUrl = first.artworkUrl100.replace("100x100", "5000x5000");
+                const cardDiv = document.getElementById(divID);
+                if (!cardDiv) {
+                    console.warn("No such div ID:", divID);
+                    return;
                 }
-            }
 
-            // === Update the details class according to prompt ===
-            // Format: 
-            // Genre: [Genre Name]
-            //
-            // Release: [Date in format: Month Day, Year]
-            const detailsElem = document.querySelector(".details");
-            if (detailsElem) {
-                let genre = first.primaryGenreName || "";
-                let releaseDateStr = "";
-                if (first.releaseDate) {
-                    const dateObj = new Date(first.releaseDate);
-                    // e.g.: August 16, 2011
-                    const month = dateObj.toLocaleString("en-US", { month: "long" });
-                    const day = dateObj.getDate();
-                    const year = dateObj.getFullYear();
-                    releaseDateStr = `${month} ${day}, ${year}`;
+                // Set .card > img (first img in this container)
+                const mainImg = cardDiv.querySelector("img");
+                if (mainImg) {
+                    mainImg.src = first.artworkUrl100.replace("100x100", "5000x5000");
+                    mainImg.alt = first.trackName + " by " + first.artistName;
                 }
-                detailsElem.innerHTML = `
-                    Genre: ${genre}<br>
-                    Release: ${releaseDateStr}
-                `;
+
+                // Title and artist in this card only
+                const titleElem = cardDiv.querySelector(".title");
+                const artistElem = cardDiv.querySelector(".artist");
+                if (titleElem) {
+                    titleElem.textContent = first.trackName;
+                    applyTitleMarqueeIfNeeded(titleElem);
+                }
+                if (artistElem) {
+                    artistElem.textContent = first.artistName;
+                }
+
+                // Explicit marker in this card
+                const explicitDiv = cardDiv.querySelector(".explicitcy");
+                if (explicitDiv) {
+                    // Remove any previous explicit marker
+                    explicitDiv.querySelectorAll(".explicit-marker").forEach(el => el.remove());
+                    if (first.trackExplicitness && first.trackExplicitness === "explicit") {
+                        const boldE = document.createElement("b");
+                        boldE.className = "explicit-marker";
+                        boldE.textContent = "E";
+                        explicitDiv.insertBefore(boldE, explicitDiv.firstChild);
+                    }
+                }
+
+                // Details update (genre/release info) in this card
+                const detailsElem = cardDiv.querySelector(".details");
+                if (detailsElem) {
+                    let genre = first.primaryGenreName || "";
+                    let releaseDateStr = "";
+                    if (first.releaseDate) {
+                        const dateObj = new Date(first.releaseDate);
+                        const month = dateObj.toLocaleString("en-US", { month: "long" });
+                        const day = dateObj.getDate();
+                        const year = dateObj.getFullYear();
+                        releaseDateStr = `${month} ${day}, ${year}`;
+                    }
+                    detailsElem.innerHTML = `
+                        Genre: ${genre}<br>
+                        Release: ${releaseDateStr}
+                    `;
+                }
+            } else {
+                console.warn("No song results found.");
             }
-        } else {
-            console.warn("No song results found.");
-        }
-    })
-    .catch((error) => {
-        console.error("Error fetching data:", error);
+        })
+        .catch((error) => {
+            console.error("Error fetching data:", error);
+        });
+}
+
+fetchAndDisplaySong("levitating dua lipa", "next");
+fetchAndDisplaySong("cant hold us macklemore", "main");
+
+/**
+ * If the title overflows its container, apply a marquee scrolling effect.
+ */
+function applyTitleMarqueeIfNeeded(titleElement) {
+    // Ensure layout is computed before measuring
+    requestAnimationFrame(() => {
+        const needsScroll = titleElement.scrollWidth > titleElement.clientWidth + 2;
+        if (!needsScroll) return;
+
+        const titleText = titleElement.textContent || "";
+
+        // Build marquee structure
+        const wrapper = document.createElement("div");
+        wrapper.className = "marquee";
+        const inner = document.createElement("div");
+        inner.className = "marquee__inner";
+
+        const span1 = document.createElement("span");
+        span1.textContent = titleText;
+        const span2 = document.createElement("span");
+        span2.textContent = titleText;
+        span2.setAttribute("aria-hidden", "true");
+
+        inner.appendChild(span1);
+        inner.appendChild(span2);
+        wrapper.appendChild(inner);
+
+        // Replace original content
+        titleElement.textContent = "";
+        titleElement.appendChild(wrapper);
+
+        // Adjust animation speed relative to text length for readability
+        const baseDurationSeconds = 9;
+        const lengthFactor = Math.min(Math.max(titleText.length / 20, 0.7), 2.5);
+        inner.style.animationDuration = `${baseDurationSeconds * lengthFactor}s`;
+
+        // Compute exact scroll distance (width of one copy + gap)
+        const computeAndSetDistance = () => {
+            const styles = getComputedStyle(inner);
+            const gapPx = parseFloat(styles.columnGap || styles.gap || "0") || 0;
+            const distance = Math.ceil(span1.offsetWidth + gapPx);
+            inner.style.setProperty("--marquee-distance", `${distance}px`);
+
+            // Restart animation to avoid visual jumps on dimension change
+            const currentAnimation = inner.style.animation;
+            inner.style.animation = "none";
+            // Force reflow
+            // eslint-disable-next-line no-unused-expressions
+            inner.offsetHeight;
+            inner.style.animation = currentAnimation || "";
+        };
+
+        computeAndSetDistance();
+
+        // Recompute on resize/orientation changes
+        const onResize = () => computeAndSetDistance();
+        window.addEventListener("resize", onResize);
+        window.addEventListener("orientationchange", onResize);
+
+        // Store cleanup on element for potential future use
+        titleElement._cleanupMarquee = () => {
+            window.removeEventListener("resize", onResize);
+            window.removeEventListener("orientationchange", onResize);
+        };
     });
+}

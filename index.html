@@ -13,7 +13,7 @@
     <script async src="index.js"></script>
   </head>
   <body>
-    <div class="card">
+    <div class="card" id="next">
       <img />
       <div class="explicitcy">
         <p class="title"></p>
@@ -23,7 +23,49 @@
         <input type="range" class="seekbar" min="0" max="30" value="0" step="0.1" />
         <div class="seekbarLabels">
           <span class="currentTimeLabel">00:00</span>
-          <span class="durationLabel">00:00</span>
+          <span class="durationLabel">00:30</span>
+        </div>
+      </div>
+      <div class="playerContainer">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="play active">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" />
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="pause">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M9 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" />
+          <path d="M17 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" />
+        </svg>
+      </div>
+      <p class="details"></p>
+      <div class="volumeContainer">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M15 8a5 5 0 0 1 0 8" />
+          <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
+        </svg>
+
+        <input type="range" class="volume" min="0" max="100" value="50" step="0.1" />
+
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M15 8a5 5 0 0 1 0 8" />
+          <path d="M17.7 5a9 9 0 0 1 0 14" />
+          <path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
+        </svg>
+      </div>
+    </div>
+    <div class="card" id="main">
+      <img />
+      <div class="explicitcy">
+        <p class="title"></p>
+      </div>
+      <p class="artist"></p>
+      <div class="seekbarContainer">
+        <input type="range" class="seekbar" min="0" max="30" value="0" step="0.1" />
+        <div class="seekbarLabels">
+          <span class="currentTimeLabel">00:00</span>
+          <span class="durationLabel">00:30</span>
         </div>
       </div>
       <div class="playerContainer">

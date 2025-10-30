@@ -16,6 +16,24 @@
   font-weight: 100;
 }
 
+@font-face {
+  font-family: "SF Pro Mono";
+  src: url("Fonts/SFMono-Bold.otf");
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: "SF Pro Mono";
+  src: url("Fonts/SFMono-Medium.otf");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "SF Pro Mono";
+  src: url("Fonts/SFMono-Regular.otf");
+  font-weight: 100;
+}
+
 * {
   font-family: "SF Pro Display";
   font-weight: 500;
@@ -44,6 +62,17 @@ body {
   justify-content: center;
   align-items: flex-start;
   border-radius: 64px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.2s ease-in-out;
+  /* outline: 2px solid color-mix(in srgb, #808080, transparent 75%); */
+}
+
+#next.card {
+  scale: 0.9;
+  top: 50%;
+  left: 50%;
+  transform: translate(-55.5%, -64%);
 }
 
 .card > * {
@@ -52,7 +81,7 @@ body {
 
 .card > img {
   border-radius: 32px;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .title {
@@ -60,7 +89,6 @@ body {
   font-weight: 900;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .artist {
@@ -70,7 +98,6 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   color: #333;
-  margin-bottom: 16px;
 }
 
 .seekbar {
@@ -86,6 +113,7 @@ body {
 }
 
 .seekbarLabels > span {
+  font-family: "SF Pro Mono";
   font-size: 16px;
 }
 
@@ -109,10 +137,43 @@ body {
   margin-bottom: 24px;
 }
 
+/* Marquee scrolling for long titles */
+.marquee {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.marquee__inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 64px; /* space between repeats */
+  will-change: transform;
+  animation: marquee-scroll 12s linear infinite;
+}
+
+.marquee__inner > span {
+  white-space: nowrap;
+  /* ensure font matches title */
+  font-size: 32px;
+  font-weight: 900;
+  font-family: "SF Pro Display";
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-1 * var(--marquee-distance, 0px)));
+  }
+}
+
 .volumeContainer {
   display: flex;
   justify-content: space-between;
-  padding: 0px 8px;
+  align-items: center;
+  padding: 0px 12px;
 }
 
 .volume {
@@ -124,7 +185,7 @@ body {
 }
 
 .volumeContainer > svg {
-  width: 16px;
+  width: 24px;
   stroke: #000000;
 }
 
@@ -133,7 +194,7 @@ body {
   border-radius: 16px;
   background-color: #333333;
   color: #ffffff;
-  display: block;
+  display: none;
   margin-left: auto;
   margin-right: auto;
   margin-top: 8px;
@@ -141,4 +202,72 @@ body {
   position: relative;
   top: 0;
   border: none;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: #cccccc; /* unfilled track */
+  border-radius: 2px;
+  outline: none;
+  overflow: hidden; /* ensures white fill stays within track */
+}
+
+/* WebKit browsers (Chrome, Safari, Edge) */
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  background: #cccccc;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 4px;
+  height: 4px;
+  background: #000000;
+  border-radius: 50%;
+  box-shadow: -100vw 0 0 100vw #000000; /* creates the filled progress */
+  cursor: pointer;
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-track {
+  height: 4px;
+  background: #333333;
+}
+
+input[type="range"]::-moz-range-progress {
+  height: 4px;
+  background: #000000;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 4px;
+  height: 4px;
+  background: #000000;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Old Edge / IE */
+input[type="range"]::-ms-track {
+  height: 4px;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type="range"]::-ms-fill-lower {
+  background: #000000;
+}
+input[type="range"]::-ms-fill-upper {
+  background: #333333;
+}
+input[type="range"]::-ms-thumb {
+  width: 4px;
+  height: 4px;
+  background: #000000;
+  border-radius: 50%;
+  cursor: pointer;
 }
