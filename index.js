@@ -129,8 +129,10 @@ function fetchAndDisplaySong(songName, divID) {
         });
 }
 
-fetchAndDisplaySong("levitating dua lipa", "next");
-fetchAndDisplaySong("cant hold us macklemore", "main");
+import { requestSong } from "./backend.js";
+
+fetchAndDisplaySong(requestSong(), "next");
+fetchAndDisplaySong(requestSong(), "main");
 
 /**
  * If the title overflows its container, apply a marquee scrolling effect.
