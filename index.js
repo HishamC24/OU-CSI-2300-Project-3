@@ -198,3 +198,49 @@ function applyTitleMarqueeIfNeeded(titleElement) {
         };
     });
 }
+
+
+// iOS drag support for all range sliders
+
+const diagramSliders = document.querySelectorAll('input[type="range"]');
+
+function iosRangeTouchHandler(e) {
+    // Only handle single touch
+    if (e.touches.length > 1) return;
+
+    const input = e.target;
+    const rect = input.getBoundingClientRect();
+    const touch = e.touches[0] || e.changedTouches[0];
+
+    // Calculate position relative to slider
+    let left = rect.left + window.scrollX;
+    let width = rect.width;
+    let percent = (touch.pageX - left) / width;
+    percent = Math.min(Math.max(percent, 0), 1);
+
+    const min = parseFloat(input.min || 0);
+    const max = parseFloat(input.max || 100);
+    const step = parseFloat(input.step || 1);
+
+    // Map percent to value
+    let rawValue = min + percent * (max - min);
+    // Snap to nearest step
+    let steppedValue = Math.round((rawValue - min) / step) * step + min;
+    // Clamp
+    steppedValue = Math.min(Math.max(steppedValue, min), max);
+
+    input.value = steppedValue;
+    // Fire input and change events manually for live updates
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+
+    // Prevent native oddities/cursor stealing
+    e.preventDefault();
+}
+
+if (/iPhone|iPad|iPod/.test(navigator.platform)) {
+    diagramSliders.forEach(slider => {
+        slider.addEventListener("touchstart", iosRangeTouchHandler, { passive: false });
+        slider.addEventListener("touchmove", iosRangeTouchHandler, { passive: false });
+    });
+}
